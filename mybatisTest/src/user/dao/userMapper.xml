@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="userSQL">
+ 	<!-- UserDTO의 필드와 테이블의 컬럼명이 다른경우 -->
+ 	<resultMap type="user.bean.UserDTO" id="userResult">
+ 		<result property="DTO의 필드명" column="테이블의 컬럼명"/>
+ 		<result property="name" column="NAME"/>
+ 		<result property="id" column="ID"/>
+ 		<result property="pwd" column="PWD"/>
+ 	</resultMap>
+ 
+ 
+ 	<insert id="write" parameterType="user.bean.UserDTO"><!-- import없으니까 풀쿼리네임 써야한다 -->
+ 		insert into usertable values(#{name},#{id},#{pwd})
+ 	</insert>
+ 	 <select id ="getList" resultMap="userResult">
+ 	 	select * from usertable
+ 	 </select>
+ 	 <select id="getUser" parameterType="String" resultType="user.bean.UserDTO"><!-- java.lang.Sting //user--> 	 
+ 	 	select * from usertable where id = #{id}
+ 	 </select>
+ 	 <update id="update" parameterType ="java.util.Map">
+ 	 	update usertable set name = #{name},pwd = #{pwd} where id =#{id}<!-- #{}=? -->
+ 	  </update>
+ 	 <delete id="delete" parameterType="String">
+ 	  	delete usertable  where id = #{id}
+ 	 </delete>	 
+ 	 <select id="search" parameterType ="java.util.Map" resultType="user">
+ 	 	
+ 	 	<!-- XML  -->
+ 	 	<!-- select * from usertable where -->
+ 	 	<!-- <if test ="조건"></if> -->
+ 	 	<!-- <if test ="columnName == 'name'">
+ 	 		name like '%'|| #{value} ||'%'
+ 	 	</if>
+ 	 	<if test ="columnName == 'id'">
+ 	 		id like '%'|| #{value} ||'%'
+ 	 	</if> -->
+ 	 	
+ 	 	
+ 	 	<!-- <choose>
+ 	 		 select * from usertable where 
+ 	 		<when test="columnName == 'name'">
+ 	 		name like '%'|| #{value} ||'%'
+ 	 		</when>
+ 	 		<otherwise>
+ 	 			id like '%'|| #{value} ||'%'
+ 	 		</otherwise>
+ 	 	</choose> -->
+ 	 	
+ 	 	
+ 	 	select * from usertable where ${columnName} like '%'|| #{value} ||'%'
+ 	 	<!--  $-data의 리터럴 값("name")이아니라  name으로 하고싶을때 -->
+ 	 	
+ 	 	
+ 	 </select>
+ 	  	 
+ 	 	
+ </mapper>
